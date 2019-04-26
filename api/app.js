@@ -1,7 +1,17 @@
+const fs = require('fs');
 var express = require('express');
 var app = express();
 var uuid = require('node-uuid');
 var logger = require('morgan');
+
+//Load Secrets from docker-secrets
+var dbpass = fs.readFileSync('/run/secrets/pg_password', 'utf8').trim()
+var dbuser = fs.readFileSync('/run/secrets/pg_user', 'utf8').trim()
+var dbname = fs.readFileSync('/run/secrets/pg_database', 'utf8').trim()
+var dbhost = process.env.DB_HOST_DATA_ENV
+process.env.DB='postgres://'+dbuser+':'+dbpass+'@'+dbhost+'/'+dbname
+
+
 
 var pg = require('pg');
 var conString = process.env.DB; // "postgres://username:password@localhost/database";
